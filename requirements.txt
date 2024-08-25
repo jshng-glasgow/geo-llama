@@ -1,6 +1,7 @@
 # pip installs
 gradio
 lingua-language-detector
+requests-mock
 ##xformers<0.0.26
 accelerate==0.33
 geopy
