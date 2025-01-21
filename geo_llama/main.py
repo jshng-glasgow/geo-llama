@@ -66,9 +66,10 @@ class GeoLlama:
         # extract the toponyms
         toponyms = self.get_toponyms(text)
         output = []
+        cache = {}
         # estimate location foreach toponym
         for toponym in toponyms:
-            matches = self.get_matches(toponym)
+            matches, cache = self.get_matches(toponym, cache)
             location = self.get_location(toponym=toponym, 
                                          text=text, 
                                          matches=matches)
@@ -89,10 +90,15 @@ class GeoLlama:
                                             validation_data=text)
         return output['toponyms']
     
-    def get_matches(self, toponym:str):
+    def get_matches(self, toponym:str, cache:dict={}):
         user_agent = f'GeoLLama_req_{datetime.now().isoformat()}'
         #print(toponym)
-        raw_matches = self.gazetteer.query(toponym,user_agent)
+        # check in cache first
+        raw_matches = cache.get(toponym, None)
+        # otherwise search nominatim
+        if not raw_matches:
+            raw_matches = self.gazetteer.query(toponym,user_agent)
+            cache.append({'toponym':raw_matches})
         #print(raw_matches)
         out = []
         for m in raw_matches:
@@ -100,7 +106,7 @@ class GeoLlama:
                         'lat':m['lat'], 
                         'lon':m['lon'], 
                         'address':m['display_name']})
-        return out
+        return out, cache
     
     def get_location(self, toponym:str, text:str, matches:list[dict]):
         """Usees the specified RAG_model to identify the best candidate location
