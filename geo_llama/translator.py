@@ -11,7 +11,8 @@ class Translator:
         M2M100 model and the Lingua package. If the language is being detected
         from a pool of possible languages these can be stated to improve
         computational efficiency, otherwise leave blank to translate from any
-        language. 
+        language. This class has a "test mode" using a dummy model to avoid 
+        over computationally expensive testing.
 
         Args:
             languages (list, optional): A list of potential source languages as 
@@ -20,14 +21,15 @@ class Translator:
             model_str (str, optional): The model being used. Can be '418M' or 
             '1.2B'. Defaults to '418M'.
         """
+        # list of languages
         if languages:
             self.languages = [getattr(Language, l.upper()) for l in languages]
         else:
             self.languages = None
-        
-        self.detector = self.get_detector()
-        
+        # set the other variables    
         self.test_mode = test_mode
+        self.detector = self.get_detector()
+        # set up test mode if applicable
         if self.test_mode:
             self.model_str = 'test_model'
             self.model = DummyTranslator()

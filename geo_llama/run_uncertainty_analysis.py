@@ -2,6 +2,9 @@ from geo_llama.main import GeoLlama
 from geo_llama.model import TopoModel, RAGModel
 from argparse import ArgumentParser
 
+"""Runs the model on the same peice of text N times, allowing users to 
+view the degree of uncertainty in the model predictions. 
+"""
 def load_geo_llama():
     # load the geollama model
     topo_model = TopoModel(model_name='JoeShingleton/GeoLlama-3.1-8b-toponym', 

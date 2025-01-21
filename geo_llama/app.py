@@ -14,6 +14,10 @@ from geo_llama.model import RAGModel, TopoModel
 from geo_llama.main import GeoLlama
 from geo_llama.plotting import plot_map
 
+# set up proxy for broadacsting Gradio app
+os.environ['NO_PROXY'] = '127.0.0.1'
+
+
 """This script runs the full geoparsing pipeline using a Gradio web browser
 based app. This script should be edited to reflect changes to the model name or
 prompt templates.
@@ -123,7 +127,7 @@ def main():
 
 if __name__=='__main__':
     # specify models. We're using GeoLlama 3.1 here
-    translator = Translator(model_size='1.2B')
+    translator = Translator(model_size='1.2B', )
     topo_model = TopoModel(model_name='JoeShingleton/GeoLlama-3.1-8b-toponym', 
                         prompt_path='data/prompt_templates/prompt_template.txt',
                         instruct_path='data/prompt_templates/topo_instruction.txt',
